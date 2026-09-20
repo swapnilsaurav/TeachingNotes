@@ -1,0 +1,332 @@
+Suggested teaching flow: Excel Data Analysis – Practical Workshop
+Use a simple Sales & Profit dataset throughout:
+Date	Region	Product	Units	Unit Price	Sales	Cost	Profit	Ad Spend
+01-Jan	North	Laptop	10	50,000	500,000	420,000	80,000	20,000
+02-Jan	South	Laptop	12	50,000	600,000	500,000	100,000	25,000
+03-Jan	West	Tablet	20	25,000	500,000	410,000	90,000	18,000
+04-Jan	East	Mobile	30	20,000	600,000	480,000	120,000	30,000
+05-Jan	North	Mobile	35	20,000	700,000	550,000	150,000	32,000
+
+
+For actual practice, I would expand this to 500–1,000 rows.
+1. Data Analysis: start with the business question
+Don't start by teaching formulas. Start with:
+"Management has given us sales data. What can Excel tell us that will help management make a decision?"
+
+Teach learners to move through:
+Raw Data → Clean → Summarize → Analyze → Visualize → Interpret → Decide
+Give them questions such as: Which region generates the highest sales? Which product is most profitable? Is advertising related to sales? Are sales increasing over time? What sales level is required to achieve a target profit?
+This gives purpose to everything that follows.
+2. Descriptive Statistics
+Take the Sales column and ask:
+"Before building any model, what does a typical sales day look like?"
+
+Teach:
+=AVERAGE(F2:F501)
+=MEDIAN(F2:F501)
+=MODE.SNGL(F2:F501)
+=MIN(F2:F501)
+=MAX(F2:F501)
+=STDEV.S(F2:F501)
+=VAR.S(F2:F501)
+=COUNT(F2:F501)
+Then show the faster method:
+Data → Data Analysis → Descriptive Statistics
+Select Sales as the input range and generate Summary Statistics.
+Explain the interpretation, not just calculation:
+Mean = typical average sales
+Median = middle observation
+Standard deviation = how much sales fluctuate
+Minimum/Maximum = range of observed performance
+A good question for students:
+"Two regions both average ₹5 lakh sales. Region A has SD ₹40,000 and Region B has SD ₹2 lakh. Are they really performing similarly?"
+
+This introduces variability.
+3. Covariance
+Now compare Advertising Spend and Sales.
+=COVARIANCE.S(I2:I501,F2:F501)
+Explain:
+Positive covariance: variables generally move together.
+Negative covariance: when one increases, the other tends to decrease.
+Near zero: little linear co-movement.
+The important teaching point is that the magnitude of covariance depends on the units, which makes comparison difficult. That naturally leads to correlation.
+4. Correlation
+Ask:
+"Does higher advertising expenditure tend to be associated with higher sales?"
+
+Use:
+=CORREL(I2:I501,F2:F501)
+Interpret roughly:
+Correlation	Interpretation
++1	Perfect positive relationship
++0.8	Strong positive relationship
+0	No linear relationship
+-0.8	Strong negative relationship
+-1	Perfect negative relationship
+
+
+Then use:
+Data → Data Analysis → Correlation
+Have students create a correlation matrix for:
+Units | Unit Price | Sales | Cost | Profit | Ad Spend
+This interactive visualization is also useful for explaining why correlation changes as the pattern of points changes:
+
+
+
+Drag points
+2468102468\(X\)\(Y\)
+
+
+
+
+
+Linear correlation is positive (r = 0.98).
+
+NegativeNear zeroPositive
+
+
+
+
+
+
+
+
+
+
+Give feedback
+Emphasize:
+Correlation does not prove causation.
+
+Advertising and sales being correlated doesn't by itself prove that advertising caused the sales increase.
+5. Regression
+Now turn the correlation question into a prediction question:
+"If we spend ₹50,000 on advertising, what sales might we expect?"
+
+First create:
+Insert → Scatter Plot
+X-axis = Advertising Spend
+Y-axis = Sales
+Add:
+Trendline → Linear → Display Equation + R²
+You might get something like:
+Sales = 14.2 × Advertising + 180,000
+Explain:
+- Intercept = predicted sales when advertising is zero
+- Slope = estimated change in sales for each ₹1 change in advertising
+- R² = proportion of observed variation in Sales explained by the fitted model, within the model assumptions
+Then:
+Data → Data Analysis → Regression
+Set:
+Y Range = Sales
+X Range = Advertising Spend
+Teach students to identify Coefficients, R Square, p-values and residuals.
+
+
+\(\hat{y} = b_0 + b_1x\)
+
+\(\hat{y} = 8.49 - 0.54x\)
+R² = 0.72 · b₀ = intercept · b₁ = slope · least squares minimizes squared vertical residual gaps.
+
+Focus
+DataLinePredictionsResiduals
+
+
+
+
+
+
+Generate new data
+
+
+
+
+Drag a point to refit the line.
+246810246810
+
+
+
+
+
+Give feedback
+Then extend to multiple regression:
+Sales = f(Advertising, Price, Units)
+This is a nice bridge from Excel analytics into machine learning.
+6. Moving Average
+Now move to time-series analysis.
+Business question:
+"Daily sales fluctuate heavily. How can management see the underlying trend?"
+
+For a 3-day moving average:
+=AVERAGE(F2:F4)
+Then drag down:
+Day 1   400,000
+Day 2   600,000
+Day 3   500,000   → MA = 500,000
+Day 4   700,000   → MA = 600,000
+Day 5   900,000   → MA = 700,000
+Also demonstrate:
+Data → Data Analysis → Moving Average
+Then plot:
+Actual Sales vs Moving Average
+Explain that moving averages smooth short-term fluctuations and make trends easier to see, though they can lag sudden changes.
+Move from Analysis to Decision Making
+7. What-If Analysis
+Create a simple profit model:
+Units Sold       1,000
+Selling Price    ₹500
+Variable Cost    ₹300
+Fixed Cost       ₹100,000
+Revenue:
+=Units*Price
+Profit:
+=(Units*(Price-VariableCost))-FixedCost
+Current profit:
+1000 × (500-300) - 100000 = ₹100,000
+Now ask:
+"What happens to profit if price changes?"
+
+Use:
+Data → What-If Analysis → Data Table
+Put different prices:
+₹400
+₹450
+₹500
+₹550
+₹600
+₹650
+Excel calculates profit for every price.
+Then teach a two-variable Data Table:
+Selling Price × Units Sold → Profit
+This is excellent for sensitivity analysis.
+8. Goal Seek
+Reverse the previous problem.
+Instead of:
+"If I sell 1,000 units, what is my profit?"
+
+Ask:
+"How many units must I sell to earn ₹500,000 profit?"
+
+Go to:
+Data → What-If Analysis → Goal Seek
+Set cell:       Profit
+To value:       500000
+By changing:    Units Sold
+This usually creates an immediate "aha" moment because Excel works backwards from the business target.
+Other examples:
+What selling price gives 20% margin?
+
+What monthly sales are required to break even?
+
+What interest rate makes EMI ₹50,000?
+
+9. Scenario Manager
+Now introduce uncertainty.
+Create three scenarios:
+Variable	Best Case	Expected	Worst Case
+Units	1,500	1,000	700
+Price	₹550	₹500	₹450
+Variable Cost	₹280	₹300	₹340
+
+
+Go to:
+Data → What-If Analysis → Scenario Manager → Add
+Create:
+Best Case
+Expected Case
+Worst Case
+Changing cells:
+Units + Price + Variable Cost
+Result cell:
+Profit
+Then generate Scenario Summary.
+Explain the difference:
+Goal Seek: "What input gets me this result?"
+Scenario Manager: "What happens under different combinations of assumptions?"
+Data Table: "How sensitive is my result to one or two variables?"
+Data Preparation & BI
+10. Loading Data
+Now deliberately give students data outside Excel.
+Have three files:
+January_Sales.csv
+February_Sales.csv
+March_Sales.csv
+Teach:
+Data → Get Data → From File → From Text/CSV
+Then:
+Load
+versus
+Transform Data
+Explain that Load brings data into Excel, whereas Transform opens Power Query so it can be cleaned before loading.
+Also demonstrate importing from:
+CSV / TXT → Excel Workbook → Folder → Web → Database
+11. Power Query Transformations
+This should be one of the most hands-on parts.
+Give intentionally dirty data:
+" NORTH "
+"north"
+"North"
+"HYDERABAD "
+₹12,000
+NULL
+15/09/26
+In Power Query Editor, teach:
+Remove Columns → Remove Rows → Remove Duplicates → Replace Values → Trim → Clean → Change Data Type → Split Column → Merge Columns → Fill Down → Group By → Pivot → Unpivot → Merge Queries → Append Queries
+Example:
+Raw:
+Customer_Name = "  ABC RETAIL "
+Apply:
+Transform → Format → Trim
+Result:
+ABC RETAIL
+Then transform:
+north
+NORTH
+North
+to:
+North
+North
+North
+The big lesson:
+Don't manually clean the same monthly report every month. Build the transformation once and refresh it.
+
+12. PivotTable
+Once clean data is loaded:
+Insert → PivotTable
+Start with a management question:
+"Show sales and profit by region and product."
+
+Configure:
+Rows        → Region
+Columns     → Product
+Values      → Sum of Sales
+Values      → Sum of Profit
+Filters     → Year
+Then teach:
+Sort → Filter → Value Field Settings → % of Grand Total → Group Dates → Slicers → Timeline → PivotChart
+A particularly useful exercise:
+"Build an interactive regional sales dashboard without writing a single formula."
+
+Students create:
+PivotTables + PivotCharts + Slicers
+13. Power Query + PivotTable Together
+This is where the pieces connect.
+Show this architecture:
+CSV Files → Power Query → Clean/Transform → Data Model/Excel → PivotTable → Dashboard
+Then add a new month's CSV.
+Instead of rebuilding everything:
+Data → Refresh All
+The dashboard updates.
+This demonstrates a basic automated analytics pipeline inside Excel.
+14. Live Data Connection and Analysis
+End with something more advanced.
+Explain the difference between:
+Import/Load: Excel stores a copy/snapshot of the data.
+Connected data: Excel maintains a connection to an external data source that can be refreshed.
+Demonstrate a source such as:
+Data → Get Data → From Database → SQL Server
+or a suitable web/API source.
+Conceptually:
+Source System → Power Query/Connection → Excel Data Model → PivotTable/Dashboard
+Then show:
+Data → Queries & Connections → Properties → Refresh
+Depending on the connector and Excel version, refresh behavior can vary, so I would describe this as refreshable/connected analysis rather than implying that every connection is continuously real-time.
